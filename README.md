@@ -1,13 +1,13 @@
 # ILI9341_Fast
-Fast SPI library for the ILI9341 240x320 display
+Fast SPI library for the ILI9341 240x320 TFT display
 
-Significantly optimized for 16MHz AVR Arduino boards (2.5-5x faster than other libraries)
+Significantly optimized for 16MHz AVR Arduino boards (2.5-3x faster than other libraries)
 
 Achieved 6.9Mbps SPI transfer rate (at DIV2/16MHz clock)
 
 ## Recent optimizations
 
-After recent optimizations (AVR ASM functions) all fill and copy operations work with max speed of about 7.1Mbps for 16MHz Arduino
+After recent optimizations (more AVR ASM) all fill and copy operations work with max speed of about 7.1Mbps for 16MHz Arduino
 
 YouTube video:
 
