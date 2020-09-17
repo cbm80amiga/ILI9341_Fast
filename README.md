@@ -11,9 +11,7 @@ After recent optimizations (more AVR ASM) all fill and copy operations work with
 
 YouTube video:
 
-**TBD**
-
-https://youtu.be/GciLKcWQZK4
+https://youtu.be/0RnzPXBY3SM
 
 
 ## Configuration
