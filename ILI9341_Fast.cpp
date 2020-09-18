@@ -314,13 +314,26 @@ void ILI9341::writeCmd(uint8_t c)
 }
 
 // ----------------------------------------------------------
-void ILI9341::writeData(uint8_t c) 
+void ILI9341::writeData(uint8_t d8) 
 {
   DC_DATA;
   CS_ACTIVE;
   SPI_START;
     
-  writeSPI(c);
+  writeSPI(d8);
+
+  CS_IDLE;
+  SPI_END;
+}
+
+// ----------------------------------------------------------
+void ILI9341::writeData16(uint16_t d16) 
+{
+  DC_DATA;
+  CS_ACTIVE;
+  SPI_START;
+    
+  writeMulti(d16,1);
 
   CS_IDLE;
   SPI_END;
@@ -383,29 +396,25 @@ void ILI9341::setAddrWindow(uint16_t xs, uint16_t ys, uint16_t xe, uint16_t ye)
   SPI_START;
   
   DC_COMMAND; writeSPI(ILI9341_CASET);
-  DC_DATA;
-  writeSPI(xs >> 8); writeSPI(xs & 0xFF);
-  writeSPI(xe >> 8); writeSPI(xe & 0xFF);
+  DC_DATA;    writeMulti(xs,1); writeMulti(xe,1);
 
   DC_COMMAND; writeSPI(ILI9341_PASET);
-  DC_DATA;
-  writeSPI(ys >> 8); writeSPI(ys & 0xFF);
-  writeSPI(ye >> 8); writeSPI(ye & 0xFF);
+  DC_DATA;    writeMulti(ys,1); writeMulti(ye,1);
 
   DC_COMMAND; writeSPI(ILI9341_RAMWR);
-  
-  CS_IDLE;
-  SPI_END;
+
+  DC_DATA;
+  // no CS_IDLE + SPI_END, DC_DATA to save memory
 }
 
 // ----------------------------------------------------------
 void ILI9341::pushColor(uint16_t color) 
 {
   SPI_START;
-  DC_DATA;
+  //DC_DATA;
   CS_ACTIVE;
 
-  writeSPI(color >> 8); writeSPI(color);
+  writeMulti(color,1);
 
   CS_IDLE;
   SPI_END;
@@ -417,11 +426,7 @@ void ILI9341::drawPixel(int16_t x, int16_t y, uint16_t color)
   if(x<0 ||x>=_width || y<0 || y>=_height) return;
   setAddrWindow(x,y,x+1,y+1);
 
-  SPI_START;
-  DC_DATA;
-  CS_ACTIVE;
-
-  writeSPI(color >> 8); writeSPI(color);
+  writeMulti(color,1);
 
   CS_IDLE;
   SPI_END;
@@ -433,10 +438,6 @@ void ILI9341::drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color)
   if(x>=_width || y>=_height || h<=0) return;
   if(y+h-1>=_height) h=_height-y;
   setAddrWindow(x, y, x, y+h-1);
-
-  SPI_START;
-  DC_DATA;
-  CS_ACTIVE;
 
   writeMulti(color,h);
 
@@ -450,10 +451,6 @@ void ILI9341::drawFastHLine(int16_t x, int16_t y, int16_t w,  uint16_t color)
   if(x>=_width || y>=_height || w<=0) return;
   if(x+w-1>=_width)  w=_width-x;
   setAddrWindow(x, y, x+w-1, y);
-
-  SPI_START;
-  DC_DATA;
-  CS_ACTIVE;
 
   writeMulti(color,w);
 
@@ -475,10 +472,6 @@ void ILI9341::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t colo
   if(y+h-1>=_height) h=_height-y;
   setAddrWindow(x, y, x+w-1, y+h-1);
 
-  SPI_START;
-  DC_DATA;
-  CS_ACTIVE;
-
   uint32_t num = (uint32_t)w*h;
   if(num>0xffff) {
     writeMulti(color,0xffff);
@@ -499,10 +492,6 @@ void ILI9341::drawImage(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t *im
   //if(y+h-1>=_height) h=_height-y;
   setAddrWindow(x, y, x+w-1, y+h-1);
 
-  SPI_START;
-  DC_DATA;
-  CS_ACTIVE;
-  
   copyMulti((uint8_t *)img16, w*h);
 
   CS_IDLE;
@@ -515,10 +504,6 @@ void ILI9341::drawImageF(int16_t x, int16_t y, int16_t w, int16_t h, const uint1
 {
   if(x>=_width || y>=_height || w<=0 || h<=0) return;
   setAddrWindow(x, y, x+w-1, y+h-1);
-
-  SPI_START;
-  DC_DATA;
-  CS_ACTIVE;
 
   uint32_t num = (uint32_t)w*h;
   uint16_t num16 = num>>3;
@@ -573,12 +558,6 @@ void ILI9341::enableDisplay(boolean mode)
 }
 
 // ----------------------------------------------------------
-void ILI9341::idleDisplay(boolean mode) 
-{
-  //writeCmd(mode ? ILI9341_IDMON : ILI9341_IDMOFF);
-}
-
-// ----------------------------------------------------------
 void ILI9341::resetDisplay() 
 {
   writeCmd(ILI9341_SWRESET);
@@ -590,24 +569,24 @@ void ILI9341::setScrollArea(uint16_t tfa, uint16_t bfa)
 {
   uint16_t vsa = 320-tfa-bfa;
   writeCmd(ILI9341_VSCRDEF);
-  writeData(tfa >> 8); writeData(tfa);
-  writeData(vsa >> 8); writeData(vsa);
-  writeData(bfa >> 8); writeData(bfa);
+  writeData16(tfa);
+  writeData16(vsa);
+  writeData16(bfa);
 }
 
 // ----------------------------------------------------------
 void ILI9341::setScroll(uint16_t vsp) 
 {
   writeCmd(ILI9341_VSCRSADD);
-  writeData(vsp >> 8); writeData(vsp);
+  writeData16(vsp);
 }
 
 // ----------------------------------------------------------
 void ILI9341::setPartArea(uint16_t sr, uint16_t er) 
 {
   writeCmd(ILI9341_PTLAR);
-  writeData(sr >> 8); writeData(sr);
-  writeData(er >> 8); writeData(er);
+  writeData16(sr);
+  writeData16(er);
 }
 
 // ------------------------------------------------

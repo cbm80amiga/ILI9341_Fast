@@ -96,7 +96,8 @@ class ILI9341 : public Adafruit_GFX {
   void writeSPI(uint8_t);
   void writeMulti(uint16_t color, uint16_t num);
   void writeCmd(uint8_t c);
-  void writeData(uint8_t d);
+  void writeData(uint8_t d8);
+  void writeData16(uint16_t d16);
   void copyMulti(uint8_t *img, uint16_t num);
 
  private:
