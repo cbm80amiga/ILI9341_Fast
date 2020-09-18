@@ -5,14 +5,13 @@ Significantly optimized for 16MHz AVR Arduino boards (2.5-3x faster than other l
 
 Achieved 6.9Mbps SPI transfer rate (at DIV2/16MHz clock)
 
-## Recent optimizations
-
-After recent optimizations (more AVR ASM) all fill and copy operations work with max speed of about 7.1Mbps for 16MHz Arduino
-
 YouTube video:
 
 https://youtu.be/0RnzPXBY3SM
 
+## Recent optimizations
+
+After recent optimizations (more AVR ASM) all fill and copy operations work with max speed of about 7.1Mbps for 16MHz Arduino
 
 ## Configuration
 
