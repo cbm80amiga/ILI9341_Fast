@@ -1,5 +1,5 @@
 // ILI9341 library example
-// (c) 2020 Pawel A. Hernik
+// (c) 2019-20 Pawel A. Hernik
 // Color gauges and progress bars
 // YouTube videos:
 // https://youtu.be/rdL3qHEnd4Q

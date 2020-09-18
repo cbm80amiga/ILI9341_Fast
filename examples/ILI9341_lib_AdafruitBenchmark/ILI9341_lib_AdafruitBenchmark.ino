@@ -83,7 +83,7 @@ unsigned long DrawImageTest()
 unsigned long DrawImageFTest()
 {
   unsigned long start = millis();
-  for(int i=0;i<5*4;i++) for(int y=0;y<SCR_HT;y++) tft.drawImageF(0,y,SCR_WD,1,imgF);
+  for(int i=0;i<5*4;i++) for(int y=0;y<SCR_HT;y++) tft.drawImageF(0,y,SCR_WD,1,imgF+(((y>>2)+i)&0xf));
   return millis()-start;
 }
 // ------------------------------------------------ 
@@ -246,7 +246,29 @@ void setup(void)
 
 /*
 
---- Fast AVR + writeMulti + copMulti:
+--- below + opt setAddrWindow + writeMulti
+ILI9341 240x320
+Benchmark   Time (microseconds)
+FillScreen Mbps          3478ms  5.75fps  7.07 Mbps 244%
+ClearScreen Mbps         3479ms  5.75fps  7.06 Mbps 244%
+DrawImage Mbps           3675ms  5.44fps  6.69 Mbps 231%
+DrawImageF Mbps          4804ms  4.16fps  5.12 Mbps 177%
+Screen fill              869884       244%
+Text                     121828       210%
+Lines                    913776       258%
+Horiz/Vert Lines         72960        245%
+Rectangles (outline)     48552        245%
+Rectangles (filled)      1805840      244%
+Circles (filled)         294596       245%
+Circles (outline)        396932       260%
+Triangles (outline)      200828       257%
+Triangles (filled)       891092       206%
+Rounded rects (outline)  152616       254%
+Rounded rects (filled)   1824908      244%
+Done!
+
+
+--- Fast AVR + writeMulti + copyMulti:
 
 ILI9341 240x320
 Benchmark   Time (microseconds)
@@ -393,11 +415,13 @@ void loop(void)
 
 unsigned long testFillScreen() {
   unsigned long start = micros();
+  //for (uint8_t i = 0; i < 12; i++) {
   tft.fillScreen(BLACK);
   tft.fillScreen(RED);
   tft.fillScreen(GREEN);
   tft.fillScreen(BLUE);
   tft.fillScreen(BLACK);
+  //}
   return micros() - start;
 }
 

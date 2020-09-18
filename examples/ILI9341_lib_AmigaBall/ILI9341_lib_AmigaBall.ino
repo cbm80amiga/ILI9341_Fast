@@ -1,6 +1,6 @@
 // ILI9341 library example
 // Amiga Boing Ball Demo
-// (c) 2020 Pawel A. Hernik
+// (c) 2019-20 Pawel A. Hernik
 // YT video: https://youtu.be/KwtkfmglT-c
 
 /*
@@ -59,8 +59,8 @@ uint16_t lineColS = RGBto565(80,10,80);
 //#define SHADOW 0
 
 // AVR stats:
-// with shadow        - 64-66ms/15fps
-// without shadow     - 59-60ms/17fps
+// with shadow        - 60-61ms/17fps
+// without shadow     - 55-56ms/18fps
 
 void drawBall(int x, int y)
 {
@@ -143,7 +143,6 @@ void loop()
   if(x>=BALL_SWD-BALL_WD) { x=BALL_SWD-BALL_WD; xd=-xd; animd=-animd; }
   if(y<0) { y=0; yd=-yd; }
   if(y>=BALL_SHT-BALL_HT) { y=BALL_SHT-BALL_HT; yd=-yd; }
-  //delay(20);
   //ms=millis()-ms; Serial.println(ms);
 }
 

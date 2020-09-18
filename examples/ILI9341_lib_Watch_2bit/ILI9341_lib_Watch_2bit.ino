@@ -98,6 +98,7 @@ uint16_t line[SCR_WD+4];
 
 void imgLineH(int x, int y, int w)
 {
+  if(w<=0) return;
   uint8_t v,*img = (uint8_t*)clockface+4*2+6+y*SCR_WD/4+x/4;
   int ww = (x&3)?w+4:w;
   for(int i=0;i<ww;i+=4) {
