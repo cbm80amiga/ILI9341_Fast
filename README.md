@@ -11,7 +11,7 @@ https://youtu.be/0RnzPXBY3SM
 
 ## Recent optimizations
 
-After recent optimizations (more AVR ASM) all fill and copy operations work with max speed of about 7.1Mbps for 16MHz Arduino and the library uses less memory than before
+After recent optimizations (more AVR assembler) all fill and copy operations work with max speed of about 7.1Mbps for 16MHz Arduino and the library flash memory usage is reduced by about 800-900 bytes
 
 ## Configuration
 
