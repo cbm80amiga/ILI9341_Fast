@@ -167,6 +167,7 @@ inline void ILI9341::writeSPI(uint8_t c)
     SPI.transfer(c);
 #else
     SPDR = c;
+    /*
     asm volatile("nop;"); // 8 NOPs seem to be enough for 16MHz AVR @ DIV2 to avoid using while loop
     asm volatile("nop");
     asm volatile("nop");
@@ -175,6 +176,11 @@ inline void ILI9341::writeSPI(uint8_t c)
     asm volatile("nop");
     asm volatile("nop");
     asm volatile("nop");
+    */
+    asm volatile("rjmp .+0\n");  // same cycles but uses half the memory
+    asm volatile("rjmp .+0\n");
+    asm volatile("rjmp .+0\n");
+    asm volatile("rjmp .+0\n");
     //while(!(SPSR & _BV(SPIF))) ;
 #endif
 }
@@ -354,7 +360,8 @@ void ILI9341::displayInit(const uint8_t *addr)
 
     if(ms) {
       ms = pgm_read_byte(addr++);
-      delay(ms==255? 500 : ms);
+      if(ms==255) ms=500;
+      delay(ms);
     }
   }
 }
@@ -414,7 +421,7 @@ void ILI9341::pushColor(uint16_t color)
   //DC_DATA;
   CS_ACTIVE;
 
-  writeMulti(color,1);
+  writeSPI(color>>8); writeSPI(color);
 
   CS_IDLE;
   SPI_END;
@@ -426,7 +433,8 @@ void ILI9341::drawPixel(int16_t x, int16_t y, uint16_t color)
   if(x<0 ||x>=_width || y<0 || y>=_height) return;
   setAddrWindow(x,y,x+1,y+1);
 
-  writeMulti(color,1);
+  //writeMulti(color,1);
+  writeSPI(color>>8); writeSPI(color);
 
   CS_IDLE;
   SPI_END;

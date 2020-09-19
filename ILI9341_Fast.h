@@ -90,8 +90,6 @@ class ILI9341 : public Adafruit_GFX {
   uint16_t rgbWheel(int idx);
 
  protected:
-  uint8_t  _xstart, _ystart;
-
   void displayInit(const uint8_t *addr);
   void writeSPI(uint8_t);
   void writeMulti(uint16_t color, uint16_t num);
