@@ -217,6 +217,7 @@ void setup(void)
   tft.setTextColor(c1); tft.print(F("DrwImgF Mbps  "));
   tft.setTextColor(c2); tft.println(String(res[1])+"ms "+String(20.0*SCR_WD*SCR_HT*16/res[1]/1000.0)+" Mbps");
   //tft.setTextColor(c2); tft.println(String(20.0*SCR_WD*SCR_HT*16/res[1]/1000.0));
+
   tft.setTextColor(c1); tft.print(F("Screen fill   "));
   tft.setTextColor(c2); tft.println(res[2]);
   tft.setTextColor(c1); tft.print(F("Text          "));
@@ -245,6 +246,29 @@ void setup(void)
 }
 
 /*
+
+--- below + back to old drawPixel
+ILI9341 240x320
+Benchmark   Time (microseconds)
+FillScreen Mbps          3477ms  5.75fps  7.07 Mbps  244%
+ClearScreen Mbps         3478ms  5.75fps  7.07 Mbps 244%
+DrawImage Mbps           3675ms  5.44fps  6.69 Mbps 231%
+DrawImageF Mbps          4804ms  4.16fps  5.12 Mbps 177%
+Screen fill              869880       244%
+Text                     120580       212%  ++
+Lines                    895560       263%  ++
+Horiz/Vert Lines         72956        245%
+Rectangles (outline)     48552        245%
+Rectangles (filled)      1805836      244%
+Circles (filled)         294596       245%
+Circles (outline)        389072       265%  +
+Triangles (outline)      196984       262%  +
+Triangles (filled)       891104       206%
+Rounded rects (outline)  150336       258%  +
+Rounded rects (filled)   1824904      244%
+Done!
+Results:
+3477,4804,869880,120580,895560,72956,48552,1805836,294596,389072,196984,891104,150336,1824904,
 
 --- below + opt setAddrWindow + writeMulti
 ILI9341 240x320
