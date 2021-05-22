@@ -20,7 +20,7 @@ Remove above for the best performance on 16MHz AVR
 
 Use "#define CS_ALWAYS_LOW" if CS pin is connected to the ground, it gives little better performance
 
-Tested with Arduino IDE 1.6.5 and Adafruit_GFX 1.5.6
+Tested with **Arduino IDE 1.6.5 and Adafruit_GFX 1.5.6**
 
 ## Extra Features
 - invertDisplay()
